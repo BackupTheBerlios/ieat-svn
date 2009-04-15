@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Class to abstract out the splash screen
  * @author Nixus
- *
  */
 public class SlashScreenAppStart
 {
@@ -65,7 +64,6 @@ public class SlashScreenAppStart
             {
                 // Start up and open application
                 Point appSize = app.getSize();
-                app.setSize(appSize.x, appSize.y);
                 app.setLocation(x - ((appSize.x/2) - SPLASH_WDTH), y - ((appSize.y/2) - SPLASH_WDTH));
                 app.addListener(SWT.Close, new Listener()
                 {
