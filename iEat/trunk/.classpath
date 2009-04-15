@@ -9,6 +9,6 @@
 			<attribute name="javadoc_location" value="http://help.eclipse.org/help31/nftopic/org.eclipse.platform.doc.isv/reference/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/cgh/util/1.0/util-1.0.jar"/>
+	<classpathentry kind="lib" path="/Utilities/target/util-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
