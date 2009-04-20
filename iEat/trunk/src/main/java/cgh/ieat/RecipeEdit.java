@@ -60,20 +60,27 @@ public class RecipeEdit
             { }
         };
         
+        // Basic Information
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 3;
+        Group basic = new Group(shell, SWT.SHADOW_NONE);
+        basic.setLayout(gridLayout);
+        basic.setText("Basic Information");
+        
         boolean newRecipe = (r == null);
         if (newRecipe)
         {
             shell.setText("Create New Recipe");
-            Label l = new Label(shell, SWT.NONE);
-            l.setText("Recipe Entry: ");
-            Text t = new Text(shell, SWT.BORDER | SWT.SINGLE);
+            Label l = new Label(basic, SWT.NONE);
+            l.setText("Recipe Name: ");
+            Text t = new Text(basic, SWT.BORDER | SWT.SINGLE);
             t.setText("Recipe Name                                            ");
             t.addFocusListener(listener);
         }
         else
-        {
-            shell.setText("Edit Recipe");
-        }
+            shell.setText("Edit Recipe - " + r.getName());
+
+        // TODO Add more information
     }
 
     public static void deleteRecipe(Recipe r, Shell shell)
