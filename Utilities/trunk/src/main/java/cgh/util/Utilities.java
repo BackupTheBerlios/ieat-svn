@@ -192,6 +192,25 @@ public class Utilities
 
     }
     
+    static public String createCSVString(String[] s, boolean addSpace)
+    {
+        if (s == null || s.length == 0)
+            return "";
+        if (s.length == 1)
+            return s[0];
+        
+        String sepChar = "," + (addSpace ? " " : "");
+        
+        StringBuilder b = new StringBuilder();
+        b.append(s[0]);
+        for(int i = 1; i < s.length; i++)
+        {
+            b.append(sepChar);
+            b.append(s[i]);
+        }
+        return b.toString();
+    }
+    
     public static final int NOT_FOUND = -1;
     public static final String NOT_FOUND_STR = "-1";
 }
