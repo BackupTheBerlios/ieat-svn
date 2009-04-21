@@ -49,7 +49,7 @@ public class AppMenuToolbar
             {
                 if (App.getTable().getSelectionIndex() == -1)
                 {
-                    MessageBox box = new MessageBox(shell, 34);
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
                     box.setText("Error");
                     box.setMessage("No item selected!");
                     box.open();

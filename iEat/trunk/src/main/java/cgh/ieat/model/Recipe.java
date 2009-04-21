@@ -39,13 +39,6 @@ public class Recipe implements Serializable
     private Ingredient mainIngredient;
     private ArrayList<String> instructions = new ArrayList<String>();
     
-    //FIXME remove this!!!!
-    public Recipe(int x)
-    {
-        this.name = Integer.toString(x);
-        this.mealType = MealType.DESERT;
-        this.mainIngredient = new Ingredient("1/4 cub", "poop");
-    }
     public Recipe(String name, ArrayList<String> tags, MealType mealType,
         ArrayList<Ingredient> ingredients, Ingredient mainIngredient,
         ArrayList<String> instructions)

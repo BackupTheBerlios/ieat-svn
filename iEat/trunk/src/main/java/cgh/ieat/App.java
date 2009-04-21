@@ -98,13 +98,6 @@ public class App
     static Label tableContentsOfLabel;
     static final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     
-    //FIXME Remove this
-    static
-    {
-        recipes.add(new Recipe(7));
-        recipes.add(new Recipe(1));
-    }
-
     protected static Table getTable()
     {
         return table;
