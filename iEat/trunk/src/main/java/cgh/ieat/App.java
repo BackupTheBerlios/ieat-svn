@@ -1,7 +1,9 @@
 package cgh.ieat;
 
 import java.text.Collator;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import org.eclipse.swt.SWT;
@@ -33,10 +35,8 @@ public class App
 
     public static void main(String[] args)
     {
-        final Display display = new Display();
+        
         final Image image = new Image(display, stockImageLocations[15]);
-        Shell shell;
-        shell = new Shell(display);
 
         // Construct application
         createShellContents(shell, display);
@@ -93,13 +93,33 @@ public class App
         gridData.horizontalSpan = 2;
         diskSpaceLabel.setLayoutData(gridData);
     }
-    
+    static final Display display = new Display();
+    static final Shell shell = new Shell(display);
     static Table table;
     static Label tableContentsOfLabel;
     static final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     static
     {
         // FIXME Read in the data
+        
+    }
+    
+    protected static String[] getStats()
+    {
+        String[] stat = new String[2];
+        
+        stat[0] = Integer.toString(recipes.size());
+        Date last = new Date(0);
+        for (Recipe r : recipes)
+            if (r.getLastUpdate().after(last))
+                last = r.getLastUpdate();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        if (last.equals(new Date(0)))
+            stat[1] = "Never";
+        else
+            stat[1] = df.format(last);
+        
+        return stat;
     }
     
     protected static Table getTable()

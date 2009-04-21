@@ -45,7 +45,6 @@ public class AppSortFilter
     protected static final String[] mainIngred = new String[] {"apples", "oranges", "you", "me"};
     protected static final String[] ingred = new String[] {"apples", "oranges", "you", "me"};
     protected static final String[] month = new String[] {"apples", "oranges", "you", "me"};
-    protected static final String statusInfo = "7";
     
     protected static void createSortFilter(final Composite shell, Display display)
     {
@@ -229,18 +228,17 @@ public class AppSortFilter
         composite.setLayout(layout);
         label = new Label (composite, SWT.NONE);
         label.setText("Number of Recipes: ");
-        final Label recipeCnt = new Label (composite, SWT.NONE);
-        recipeCnt.setText("7");
+        recipeCnt = new Label (composite, SWT.NONE);
         label = new Label (composite, SWT.NONE);
         label.setText("Last Recipe Entry: ");
-        final Label lastEntry = new Label (composite, SWT.NONE);
-        lastEntry.setText("7");
+        lastEntry = new Label (composite, SWT.NONE);
+        recipeCnt.setText(App.getStats()[0]);
+        lastEntry.setText(App.getStats()[1]);
         Button refreshButtons = new Button (composite, SWT.PUSH);
         refreshButtons.setText("Refresh Stats");
         refreshButtons.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                recipeCnt.setText(statusInfo);
-                lastEntry.setText(statusInfo);
+                doUpdate();
             }
         });
         ExpandItem item2 = new ExpandItem (bar, SWT.NONE, 2);
@@ -254,5 +252,17 @@ public class AppSortFilter
         item2.setExpanded(true);
         
         bar.setSpacing(8);
+    }
+    
+    static Label recipeCnt;
+    static Label lastEntry;
+
+    protected static void doUpdate()
+    {
+        if (recipeCnt != null)
+            recipeCnt.setText(App.getStats()[0]);
+        if (lastEntry != null)
+            lastEntry.setText(App.getStats()[1]);
+        App.shell.layout(true, true);        
     }
 }

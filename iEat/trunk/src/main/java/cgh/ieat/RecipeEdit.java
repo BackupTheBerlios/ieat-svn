@@ -453,6 +453,7 @@ public class RecipeEdit
                     ing.get(ingredCombo.getSelectionIndex()),
                     instFinal);
                 App.getRecipes().add(r2);
+                AppSortFilter.doUpdate();
                 //FIXME Do a persist of all the recipes now
                 shell.layout(true, true);
                 shell.close();

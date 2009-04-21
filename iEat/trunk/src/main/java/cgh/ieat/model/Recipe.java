@@ -2,6 +2,7 @@ package cgh.ieat.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 import cgh.util.Utilities;
 
@@ -38,6 +39,7 @@ public class Recipe implements Serializable
     private ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
     private Ingredient mainIngredient;
     private ArrayList<String> instructions = new ArrayList<String>();
+    private Date lastUpdate;
     
     public Recipe(String name, ArrayList<String> tags, MealType mealType,
         ArrayList<Ingredient> ingredients, Ingredient mainIngredient,
@@ -50,6 +52,7 @@ public class Recipe implements Serializable
         this.ingredients = ingredients;
         this.mainIngredient = mainIngredient;
         this.instructions = instructions;
+        this.lastUpdate = new Date();
     }
     public String[] values()
     {
@@ -69,6 +72,8 @@ public class Recipe implements Serializable
             + ((ingredients == null) ? 0 : ingredients.hashCode());
         result = prime * result
             + ((instructions == null) ? 0 : instructions.hashCode());
+        result = prime * result
+            + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
         result = prime * result
             + ((mainIngredient == null) ? 0 : mainIngredient.hashCode());
         result = prime * result
@@ -100,6 +105,13 @@ public class Recipe implements Serializable
                 return false;
         }
         else if (!instructions.equals(other.instructions))
+            return false;
+        if (lastUpdate == null)
+        {
+            if (other.lastUpdate != null)
+                return false;
+        }
+        else if (!lastUpdate.equals(other.lastUpdate))
             return false;
         if (mainIngredient == null)
         {
@@ -154,6 +166,10 @@ public class Recipe implements Serializable
     public ArrayList<String> getInstructions()
     {
         return instructions;
+    }
+    public Date getLastUpdate()
+    {
+        return lastUpdate;
     }
     
     public String getCSVTags()
