@@ -13,11 +13,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import cgh.ieat.AppSortFilter.SortType;
 import cgh.ieat.model.Ingredient;
 import cgh.ieat.model.Recipe;
 
@@ -84,23 +82,27 @@ public class RecipeEdit
         basic.setLayout(gridLayout);
         basic.setText("Basic Information");
         
+        Label l = new Label(basic, SWT.NONE);
         final Text nameT = new Text(basic, SWT.BORDER | SWT.SINGLE);
+        l.setText("Recipe Name: ");
         boolean newRecipe = (r == null);
         if (newRecipe)
         {
             shell.setText("Create New Recipe");
-            Label l = new Label(basic, SWT.NONE);
-            l.setText("Recipe Name: ");
-            nameT.setText("Recipe Name                                            ");
+            nameT.setText("                                                                ");
             nameT.addFocusListener(initalSelectListener);
         }
         else
+        {
             shell.setText("Edit Recipe - " + r.getName());
+            nameT.setText(r.getName());
+            nameT.setEditable(false);
+        }
 
         // Tags
         ArrayList<String> tagList = (r == null || r.getTags() == null) ? 
             new ArrayList<String>() : r.getTags();
-        Label l = new Label(basic, SWT.NONE);
+        l = new Label(basic, SWT.NONE);
         l.setText("Recipe Tags: ");
         gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
@@ -215,6 +217,7 @@ public class RecipeEdit
         b.setText("Add Ingredient");
         final Group iIngred = new Group(ingredients, SWT.SHADOW_NONE);
         iIngred.setLayout(new GridLayout());
+        Button addB = new Button(iIngred, SWT.PUSH);
         for (Ingredient i : ing)
         {
             Button bb = new Button(iIngred, SWT.CHECK);
@@ -242,11 +245,18 @@ public class RecipeEdit
                     iAmount.setText("");
                     iItem.setText("");
                 }
+                else
+                {
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
+                    box.setText("Error");
+                    box.setMessage("Either a blank amount or item was entered.");
+                    box.open();
+                    return;
+                }
             }
         });
-        b = new Button(iIngred, SWT.PUSH);
-        b.setText("Deleted Checked Ingredients");
-        b.addSelectionListener(new SelectionAdapter()
+        addB.setText("Delete Checked Ingredients");
+        addB.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
@@ -262,7 +272,7 @@ public class RecipeEdit
                 for(int i : index)
                 {
                     ing.remove(i);
-                    ingBut.remove(i);
+                    ingBut.remove(i).dispose();
                     ingredCombo.remove(i);
                 }
                 shell.layout(true, true);
@@ -271,6 +281,7 @@ public class RecipeEdit
 
         // Instructions
         final ArrayList<Text> instrBut = new ArrayList<Text>();
+        final ArrayList<Group> instrGrp = new ArrayList<Group>();
         Group instructions = new Group(ii, SWT.SHADOW_NONE);
         instructions.setLayout(new GridLayout());
         instructions.setText("Instructions");
@@ -291,10 +302,10 @@ public class RecipeEdit
             new ArrayList<String>() : r.getInstructions();
         for (String i : instr)
         {
-            Group ttG = new Group(iInstruct, SWT.SHADOW_NONE);
-            ttG.setLayout(new GridLayout());
+            final Group ttG = new Group(iInstruct, SWT.SHADOW_NONE);
+            ttG.setLayout(gridLayout);
             ttG.setText(Integer.toString(instr.indexOf(i)));
-            Text tt = new Text(ttG, SWT.BORDER | SWT.MULTI);
+            final Text tt = new Text(ttG, SWT.BORDER | SWT.MULTI);
             tt.addModifyListener(new ModifyListener(){
 
                 public void modifyText(ModifyEvent modifyevent)
@@ -303,6 +314,21 @@ public class RecipeEdit
                 }});
             tt.setText(i);
             instrBut.add(tt);
+            instrGrp.add(ttG);
+            Button delB = new Button(ttG, SWT.PUSH);
+            delB.setText("Delete");
+            delB.addSelectionListener(new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent e)
+                {
+                    instrBut.remove(tt);
+                    instrGrp.remove(ttG);
+                    ttG.dispose();
+                    shell.layout(true, true);
+                    for(Group g : instrGrp)
+                        g.setText(Integer.toString(instrGrp.indexOf(g)));
+                }
+            });
+            shell.layout(true, true);
         }
         b.addSelectionListener(new SelectionAdapter()
         {
@@ -312,9 +338,11 @@ public class RecipeEdit
                 String xx = iInstruction.getText().trim();
                 if (xx != null && !xx.isEmpty())
                 {
-                    Group ttG = new Group(iInstruct, SWT.SHADOW_NONE);
-                    ttG.setLayout(new GridLayout());
-                    Text tt = new Text(ttG, SWT.BORDER | SWT.MULTI);
+                    final Group ttG = new Group(iInstruct, SWT.SHADOW_NONE);
+                    GridLayout gridLayout = new GridLayout();
+                    gridLayout.numColumns = 2;
+                    ttG.setLayout(gridLayout);
+                    final Text tt = new Text(ttG, SWT.BORDER | SWT.MULTI);
                     tt.addModifyListener(new ModifyListener(){
 
                         public void modifyText(ModifyEvent modifyevent)
@@ -324,8 +352,30 @@ public class RecipeEdit
                     tt.setText(xx);
                     instrBut.add(tt);
                     ttG.setText(Integer.toString(instrBut.indexOf(tt)));
+                    instrGrp.add(ttG);
+                    Button delB = new Button(ttG, SWT.PUSH);
+                    delB.setText("Delete");
+                    delB.addSelectionListener(new SelectionAdapter() {
+                        public void widgetSelected(SelectionEvent e)
+                        {
+                            instrBut.remove(tt);
+                            instrGrp.remove(ttG);
+                            ttG.dispose();
+                            shell.layout(true, true);
+                            for(Group g : instrGrp)
+                                g.setText(Integer.toString(instrGrp.indexOf(g)));
+                        }
+                    });
                     shell.layout(true, true);
                     iInstruction.setText("                                                                                  ");
+                }
+                else
+                {
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
+                    box.setText("Error");
+                    box.setMessage("No Instruction Entered");
+                    box.open();
+                    return;
                 }
             }
         });
@@ -344,9 +394,10 @@ public class RecipeEdit
                 }
                 else
                     name = nameT.getText();
+                name = name.trim();
                 
                 // Verifications
-                if (name == null && name.isEmpty())
+                if (name == null || name.isEmpty())
                 {
                     MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
                     box.setText("Error");
@@ -357,8 +408,43 @@ public class RecipeEdit
                 ArrayList<String> instFinal = new ArrayList<String>();
                 for (Text tF : instrBut)
                     instFinal.add(tF.getText().trim());
+                if (instFinal.isEmpty())
+                {
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
+                    box.setText("Error");
+                    box.setMessage("No Instructions Entered");
+                    box.open();
+                    return;
+                }
+                
                 Recipe.MealType mt = (mtCombo.getSelectionIndex() == -1) ? null : 
-                    Recipe.MealType.valueOf(mtCombo.getItem(mtCombo.getSelectionIndex()));
+                    Recipe.MealType.valueOf(mtCombo.getItem(mtCombo.getSelectionIndex()).toUpperCase());
+                if (mt == null)
+                {
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
+                    box.setText("Error");
+                    box.setMessage("No Meal Type Entered");
+                    box.open();
+                    return;
+                }
+                
+                if (ingredCombo.getSelectionIndex() == -1)
+                {
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
+                    box.setText("Error");
+                    box.setMessage("No Main Ingredient Entered");
+                    box.open();
+                    return;
+                }
+                
+                if (list.getItemCount() == 0)
+                {
+                    MessageBox box = new MessageBox(shell, SWT.ICON_ERROR);
+                    box.setText("Error");
+                    box.setMessage("No Search Tags Entered");
+                    box.open();
+                    return;
+                }
                 
                 Recipe r2 = new Recipe(name, 
                     new ArrayList<String>(Arrays.asList(list.getItems())),
@@ -367,7 +453,10 @@ public class RecipeEdit
                     ing.get(ingredCombo.getSelectionIndex()),
                     instFinal);
                 App.getRecipes().add(r2);
-                shell.getParent().layout(true, true);
+                //FIXME Do a persist of all the recipes now
+                shell.layout(true, true);
+                shell.close();
+                App.setContent();
             }
         });
     }

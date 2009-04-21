@@ -18,7 +18,7 @@ public class Recipe implements Serializable
         DINNER("Dinner"),
         LUNCH("Lunch"),
         BREAKFAST("Breakfast"),
-        APP("Appitizer"),
+        APPITIZER("Appitizer"),
         SNACK("Snack"),
         SOUP("Soup"),
         SALAD("Salad"),

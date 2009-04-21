@@ -97,6 +97,10 @@ public class App
     static Table table;
     static Label tableContentsOfLabel;
     static final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+    static
+    {
+        // FIXME Read in the data
+    }
     
     protected static Table getTable()
     {
@@ -185,6 +189,7 @@ public class App
         for (int i = 0; i < Recipe.headers.length; i++) {
             table.getColumn(i).pack ();
         }
+        table.layout(true, true);
     }
 
     private static void createSortView(Composite parent, Display display)
