@@ -15,8 +15,11 @@ public class AppSortFilter
 {
     public static enum SortType {
         RECIPE("Recipe Name"),
-        DATE("Date Added"),
+        DATE("Last Updated"),
         MEAL_TYPE("Meal Type"),
+        TAGS("Tags"),
+        NUM_ING("Number Ingredients"),
+        NUM_INST("Number Instructions"),
         MAIN_INGRED("Main Ingredient");
 
         private final String display;
@@ -25,6 +28,18 @@ public class AppSortFilter
             this.display = x;
         }
         public String display() { return this.display; }
+        public int getCol(){
+            switch(this) {
+                case RECIPE:   return 0;
+                case MEAL_TYPE:  return 1;
+                case MAIN_INGRED:  return 2;
+                case TAGS: return 3;
+                case NUM_ING:  return 4;
+                case NUM_INST:  return 5;
+                case DATE:  return 6;
+            }
+            return -1;
+        }
     }
     
     public static enum FilterType {
@@ -68,16 +83,6 @@ public class AppSortFilter
             }
         });
         buttons.add(button1);
-        Button button2 = new Button (composite, SWT.RADIO);
-        button2.setText(SortType.DATE.display());
-        button2.addListener(SWT.Selection, new Listener(){
-            public void handleEvent(Event event)
-            {
-                if (((Button)event.widget).getSelection())
-                    App.resort(SortType.DATE, shell);
-            }
-        });
-        buttons.add(button2);
         Button button3 = new Button (composite, SWT.RADIO);
         button3.setText(SortType.MEAL_TYPE.display());
         button3.addListener(SWT.Selection, new Listener(){
@@ -98,6 +103,46 @@ public class AppSortFilter
             }
         });
         buttons.add(button4);
+        Button button5 = new Button (composite, SWT.RADIO);
+        button5.setText(SortType.TAGS.display());
+        button5.addListener(SWT.Selection, new Listener(){
+            public void handleEvent(Event event)
+            {
+                if (((Button)event.widget).getSelection())
+                    App.resort(SortType.TAGS, shell);
+            }
+        });
+        buttons.add(button5);
+        Button button6 = new Button (composite, SWT.RADIO);
+        button6.setText(SortType.NUM_ING.display());
+        button6.addListener(SWT.Selection, new Listener(){
+            public void handleEvent(Event event)
+            {
+                if (((Button)event.widget).getSelection())
+                    App.resort(SortType.NUM_ING, shell);
+            }
+        });
+        buttons.add(button6);
+        Button button7 = new Button (composite, SWT.RADIO);
+        button7.setText(SortType.NUM_INST.display());
+        button7.addListener(SWT.Selection, new Listener(){
+            public void handleEvent(Event event)
+            {
+                if (((Button)event.widget).getSelection())
+                    App.resort(SortType.NUM_INST, shell);
+            }
+        });
+        buttons.add(button7);
+        Button button2 = new Button (composite, SWT.RADIO);
+        button2.setText(SortType.DATE.display());
+        button2.addListener(SWT.Selection, new Listener(){
+            public void handleEvent(Event event)
+            {
+                if (((Button)event.widget).getSelection())
+                    App.resort(SortType.DATE, shell);
+            }
+        });
+        buttons.add(button2);
         ExpandItem item0 = new ExpandItem (bar, SWT.NONE, 0);
         item0.setText("Sorting Options");
         item0.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);

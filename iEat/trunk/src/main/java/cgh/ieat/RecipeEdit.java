@@ -132,6 +132,7 @@ public class RecipeEdit
                     public void shellClosed(ShellEvent shellevent)
                     {
                         shell.setEnabled(true);
+                        shell.layout(true, true);
                     }
 
                     public void shellDeactivated(ShellEvent shellevent)

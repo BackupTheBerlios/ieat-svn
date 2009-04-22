@@ -281,10 +281,12 @@ public class App
     
     public static void resort(SortType t, Composite shell)
     {
-        // YOu'll need to modify the recipes list and t hen call setContent()
-        //FIXME to implement sorting
-        System.err.println(t);
-        // setContent(); Then call this on returned set!
+        if (t == null || t.getCol() == -1)
+            return;
+        TableColumn col = table.getColumn(t.getCol());
+        Event e = new Event();
+        e.widget = col;
+        col.notifyListeners(SWT.Selection, e);
     }
     
     public static void refilter(FilterType t, Composite shell, String filterText)
