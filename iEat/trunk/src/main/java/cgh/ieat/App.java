@@ -23,7 +23,7 @@ import cgh.util.ObjectPersistanceHelper;
 
 public class App
 {
-    final static int START_CNT = 1;
+    final static int START_CNT = 3;
 
     public static final String stockImageLocations[] =
         {

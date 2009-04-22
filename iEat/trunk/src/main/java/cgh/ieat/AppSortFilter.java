@@ -76,7 +76,7 @@ public class AppSortFilter
         }
     }
     
-    protected static final String[] types = new String[] {MealType.DESERT.display(), MealType.LUNCH.display(), 
+    protected static final String[] types = new String[] {MealType.DINNER.display(), MealType.LUNCH.display(), 
                     MealType.BREAKFAST.display(), MealType.APPITIZER.display(), MealType.SNACK.display(), 
                     MealType.SOUP.display(), MealType.SALAD.display(), MealType.DESERT.display()};
     protected static final String[] month = new String[] {"01 - Jan", "02 - Feb", "03 - Mar", "04 - Apr",
