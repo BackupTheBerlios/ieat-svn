@@ -234,11 +234,12 @@ public class AppSortFilter
         lastEntry = new Label (composite, SWT.NONE);
         recipeCnt.setText(App.getStats()[0]);
         lastEntry.setText(App.getStats()[1]);
-        Button refreshButtons = new Button (composite, SWT.PUSH);
-        refreshButtons.setText("Refresh Stats");
-        refreshButtons.addSelectionListener(new SelectionAdapter() {
+        Button resetButtons = new Button (composite, SWT.PUSH);
+        resetButtons.setText("Reset Recipe View");
+        resetButtons.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                doUpdate();
+                App.readData();
+                App.setContent();
             }
         });
         ExpandItem item2 = new ExpandItem (bar, SWT.NONE, 2);

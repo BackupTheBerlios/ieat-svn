@@ -1,6 +1,7 @@
 package cgh.ieat.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,7 +13,8 @@ public class Recipe implements Serializable
     public static final String[] headers = new String[]
         {
             "Recipe Name", "MealType", "Main Ingredient",
-            "Tags", "Num Ingredients", "Num Instructions"
+            "Tags", "Num Ingredients", "Num Instructions",
+            "Last Updated"
         };
     
     public static enum MealType {
@@ -56,11 +58,13 @@ public class Recipe implements Serializable
     }
     public String[] values()
     {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return new String[]
             {
                 getName(), getMealType().display(), getMainIngredient().getItem(),
                 getCSVTags(), Integer.toString(getIngredients().size()), 
-                Integer.toString(getInstructions().size())
+                Integer.toString(getInstructions().size()),
+                df.format(getLastUpdate())
             };
     }
     @Override

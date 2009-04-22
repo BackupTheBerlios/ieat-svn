@@ -1,5 +1,6 @@
 package cgh.ieat;
 
+import java.io.File;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import cgh.ieat.AppMenuToolbar;
 import cgh.ieat.AppSortFilter.FilterType;
 import cgh.ieat.AppSortFilter.SortType;
 import cgh.ieat.model.Recipe;
+import cgh.util.ObjectPersistanceHelper;
 
 public class App
 {
@@ -93,6 +95,9 @@ public class App
         gridData.horizontalSpan = 2;
         diskSpaceLabel.setLayoutData(gridData);
     }
+    
+    static final ObjectPersistanceHelper saveHelper = new ObjectPersistanceHelper();
+    static final File fileLocation = new File(new File(System.getenv("TEMP")), "iEat");
     static final Display display = new Display();
     static final Shell shell = new Shell(display);
     static Table table;
@@ -100,8 +105,58 @@ public class App
     static final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
     static
     {
-        // FIXME Read in the data
-        
+        if (!fileLocation.exists())
+            fileLocation.mkdir();
+        readData();
+    }
+    
+    public static void removeRecipe(Recipe r)
+    {
+        App.getRecipes().remove(r);
+        File f = new File(fileLocation, r.getName());
+        if (f.exists())
+            f.delete();
+        else
+            System.err.println("Could not located recipe file!");
+    }
+    
+    protected static void readData()
+    {
+        recipes.clear();
+        File[] files = fileLocation.listFiles();
+        for (File f : files)
+        {
+            if (f == null)
+                continue;
+            Recipe r;
+            try
+            {
+                r = (Recipe)saveHelper.retrieve(f);
+                recipes.add(r);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    protected static void saveData()
+    {
+        for (Recipe r : recipes)
+        {
+            if (r == null)
+                continue;
+            try
+            {
+                File f = new File(fileLocation, r.getName());
+                saveHelper.store(r, f);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
     
     protected static String[] getStats()

@@ -126,10 +126,8 @@ public class RecipeEdit
                 newShell.setSize(300, 150);
                 newShell.addShellListener(new ShellListener()
                 {
-
                     public void shellActivated(ShellEvent shellevent)
-                    {
-                    }
+                    { }
 
                     public void shellClosed(ShellEvent shellevent)
                     {
@@ -137,16 +135,13 @@ public class RecipeEdit
                     }
 
                     public void shellDeactivated(ShellEvent shellevent)
-                    {
-                    }
+                    { }
 
                     public void shellDeiconified(ShellEvent shellevent)
-                    {
-                    }
+                    { }
 
                     public void shellIconified(ShellEvent shellevent)
-                    {
-                    }
+                    { }
                 });
                 shell.setEnabled(false);
 
@@ -239,7 +234,7 @@ public class RecipeEdit
                     
                     // Add to display list
                     Button newB = new Button(iIngred, SWT.CHECK);
-                    newB.setText(iAmount.getText() + " " + iAmount.getText());
+                    newB.setText(iAmount.getText() + " " + iItem.getText());
                     ingBut.add(newB);
                     shell.layout(true, true);
                     iAmount.setText("");
@@ -389,7 +384,7 @@ public class RecipeEdit
                 String name;
                 if (r != null)
                 {
-                    App.getRecipes().remove(r);
+                    App.removeRecipe(r);
                     name = r.getName();
                 }
                 else
@@ -454,7 +449,7 @@ public class RecipeEdit
                     instFinal);
                 App.getRecipes().add(r2);
                 AppSortFilter.doUpdate();
-                //FIXME Do a persist of all the recipes now
+                App.saveData();
                 shell.layout(true, true);
                 shell.close();
                 App.setContent();
@@ -533,7 +528,7 @@ public class RecipeEdit
 
     public static void deleteRecipe(Recipe r, Shell shell)
     {
-        App.getRecipes().remove(r);
+        App.removeRecipe(r);
         App.setContent();
         MessageBox box = new MessageBox(shell, 34);
         box.setText("Delete Confirmation");
