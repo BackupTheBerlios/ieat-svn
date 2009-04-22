@@ -3,7 +3,10 @@ package cgh.ieat.model;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+
+import com.sun.org.apache.bcel.internal.generic.Instruction;
 
 import cgh.util.Utilities;
 
@@ -66,6 +69,32 @@ public class Recipe implements Serializable
                 Integer.toString(getInstructions().size()),
                 df.format(getLastUpdate())
             };
+    }
+    private ArrayList<String> getTokens(String s)
+    {
+        return new ArrayList<String>(Arrays.asList(s.split("\\s")));
+    }
+    public ArrayList<String> searchTokens()
+    {
+        ArrayList<String> s = new ArrayList<String>();
+        
+        s.addAll(getTokens(getName()));
+        s.addAll(getTokens(getMealType().display()));
+        s.addAll(getTokens(getMainIngredient().getAmount()));
+        s.addAll(getTokens(getMainIngredient().getItem()));
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+        s.addAll(getTokens(df.format(getLastUpdate())));
+        for (String t : getTags())
+            s.addAll(getTokens(t));
+        for (String t : getInstructions())
+            s.addAll(getTokens(t));
+        for (Ingredient t : getIngredients())
+        {
+            s.addAll(getTokens(t.getAmount()));
+            s.addAll(getTokens(t.getItem()));
+        }
+        
+        return s;
     }
     @Override
     public int hashCode()

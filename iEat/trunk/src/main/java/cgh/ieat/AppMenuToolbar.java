@@ -2,6 +2,7 @@ package cgh.ieat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -336,13 +337,26 @@ public class AppMenuToolbar
                 doSearch(text);
             }
 
-            public void doSearch(String text)
+            public void doSearch(String t)
             {
-                // FIXME Add search
+                if (t == null)
+                    return;
+                
                 MessageBox box = new MessageBox(parent, 34);
                 box.setText("Search");
-                box.setMessage("Doing search of : " + text);
+                box.setMessage("Doing search of : " + t);
                 box.open();
+                
+                App.readData();
+                for (Iterator<Recipe> i = App.getRecipes().iterator(); i.hasNext();)
+                {
+                    Recipe r = (Recipe)i.next();
+                    if (r == null)
+                        continue;
+                    if (!r.searchTokens().contains(t))
+                        i.remove();
+                }
+                App.setContent();
                 doRefresh();
             }
 
