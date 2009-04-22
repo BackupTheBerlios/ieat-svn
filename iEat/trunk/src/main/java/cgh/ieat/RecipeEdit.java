@@ -540,7 +540,7 @@ public class RecipeEdit
 
     public static void printRecipe(Recipe r, Shell shell)
     {
-        // FIXME Do printing
+        // FIXME Implement printing
         MessageBox box = new MessageBox(shell, 34);
         box.setText("Print Confirmation");
         box.setMessage("Printing Recipe " + r.getName()
