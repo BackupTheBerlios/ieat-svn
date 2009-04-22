@@ -5,6 +5,7 @@ import java.text.Collator;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.eclipse.swt.SWT;
@@ -289,9 +290,18 @@ public class App
         col.notifyListeners(SWT.Selection, e);
     }
     
-    public static void refilter(FilterType t, Composite shell, String filterText)
+    public static void refilter(FilterType t, String filterText)
     {
-        //FIXME to implement sorting
-        System.err.println(t + " - " + filterText);
+        if (t == null || filterText == null || filterText.isEmpty())
+            return;
+        for (Iterator<Recipe> i = recipes.iterator(); i.hasNext();)
+        {
+            Recipe r = (Recipe)i.next();
+            if (r == null)
+                continue;
+            if (!t.matches(r, filterText))
+                i.remove();
+        }
+        App.setContent();
     }
 }

@@ -1,6 +1,7 @@
 package cgh.ieat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -10,6 +11,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+
+import cgh.ieat.model.Ingredient;
+import cgh.ieat.model.Recipe;
+import cgh.ieat.model.Recipe.MealType;
 
 public class AppSortFilter
 {
@@ -54,12 +59,29 @@ public class AppSortFilter
             this.display = x;
         }
         public String display() { return this.display; }
+        public boolean matches(Recipe r, String filterText)
+        {
+            switch(this) {
+                case INGRED:
+                    {
+                        for (Ingredient i : r.getIngredients())
+                            if (i.getItem().equals(filterText))
+                                return true;
+                    }
+                case MEAL_TYPE:  return r.getMealType().display().equals(filterText);
+                case MAIN_INGRED:  return r.getMainIngredient().getItem().equals(filterText);
+                case MONTH_ADDED: return filterText.startsWith(Integer.toString(r.getLastUpdate().getMonth()));
+            }
+            return false;
+        }
     }
     
-    protected static final String[] types = new String[] {"apples", "oranges", "you", "me"};
-    protected static final String[] mainIngred = new String[] {"apples", "oranges", "you", "me"};
-    protected static final String[] ingred = new String[] {"apples", "oranges", "you", "me"};
-    protected static final String[] month = new String[] {"apples", "oranges", "you", "me"};
+    protected static final String[] types = new String[] {MealType.DESERT.display(), MealType.LUNCH.display(), 
+                    MealType.BREAKFAST.display(), MealType.APPITIZER.display(), MealType.SNACK.display(), 
+                    MealType.SOUP.display(), MealType.SALAD.display(), MealType.DESERT.display()};
+    protected static final String[] month = new String[] {"01 - Jan", "02 - Feb", "03 - Mar", "04 - Apr",
+                                                            "05 - May", "06 - Jun", "07 - Jul", "08 - Aug",
+                                                            "09 - Sep", "10 - Oct", "11 - Nov", "12 - Dec"};
     
     protected static void createSortFilter(final Composite shell, Display display)
     {
@@ -150,6 +172,7 @@ public class AppSortFilter
         item0.setImage(image);
         
         // Second item
+        final ArrayList<Combo> combos = new ArrayList<Combo>();
         composite = new Composite (bar, SWT.NONE);
         layout = new GridLayout (2, false);
         layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
@@ -158,6 +181,7 @@ public class AppSortFilter
         Label label = new Label (composite, SWT.NONE);
         label.setText(FilterType.MEAL_TYPE.display());
         Combo combo = new Combo (composite, SWT.READ_ONLY);
+        combos.add(combo);
         combo.setItems (types);
         combo.addFocusListener(new FocusListener(){
 
@@ -175,7 +199,7 @@ public class AppSortFilter
             public void widgetSelected(SelectionEvent e)
             {
                 int selection  = ((Combo)e.widget).getSelectionIndex();
-                App.refilter(FilterType.MEAL_TYPE, shell, types[selection]);
+                App.refilter(FilterType.MEAL_TYPE, types[selection]);
             }
 
             public void widgetDefaultSelected(SelectionEvent e)
@@ -183,25 +207,14 @@ public class AppSortFilter
         });
         label = new Label (composite, SWT.NONE);
         label.setText(FilterType.MAIN_INGRED.display());
-        combo = new Combo (composite, SWT.READ_ONLY);
-        combo.setItems (mainIngred);
-        combo.addFocusListener(new FocusListener(){
-
-            public void focusGained(FocusEvent e)
-            {
-                // Do refresh
-                ((Combo)e.widget).setItems(mainIngred);
-            }
-
-            public void focusLost(FocusEvent e)
-            { } // Do nothing 
-        });
-        combo.addSelectionListener(new SelectionAdapter()
+        mainCombo = new Combo (composite, SWT.READ_ONLY);
+        combos.add(mainCombo);
+        mainCombo.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
                 int selection  = ((Combo)e.widget).getSelectionIndex();
-                App.refilter(FilterType.MAIN_INGRED, shell, mainIngred[selection]);
+                App.refilter(FilterType.MAIN_INGRED, ((Combo)e.widget).getItem(selection));
             }
 
             public void widgetDefaultSelected(SelectionEvent e)
@@ -209,33 +222,24 @@ public class AppSortFilter
         });
         label = new Label (composite, SWT.NONE);
         label.setText(FilterType.INGRED.display());
-        combo = new Combo (composite, SWT.READ_ONLY);
-        combo.setItems (ingred);
-        combo.addFocusListener(new FocusListener(){
-
-            public void focusGained(FocusEvent e)
-            {
-                // Do refresh
-                ((Combo)e.widget).setItems(ingred);
-            }
-
-            public void focusLost(FocusEvent e)
-            { } // Do nothing 
-        });
-        combo.addSelectionListener(new SelectionAdapter()
+        ingrCombo = new Combo (composite, SWT.READ_ONLY);
+        combos.add(ingrCombo);
+        ingrCombo.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
                 int selection  = ((Combo)e.widget).getSelectionIndex();
-                App.refilter(FilterType.INGRED, shell, ingred[selection]);
+                App.refilter(FilterType.INGRED, ((Combo)e.widget).getItem(selection));
             }
 
             public void widgetDefaultSelected(SelectionEvent e)
             { } // Do nothing
         });
+        doUpdate();
         label = new Label (composite, SWT.NONE);
         label.setText(FilterType.MONTH_ADDED.display());
         combo = new Combo (composite, SWT.READ_ONLY);
+        combos.add(combo);
         combo.setItems (month);
         combo.addFocusListener(new FocusListener(){
 
@@ -253,7 +257,7 @@ public class AppSortFilter
             public void widgetSelected(SelectionEvent e)
             {
                 int selection  = ((Combo)e.widget).getSelectionIndex();
-                App.refilter(FilterType.MONTH_ADDED, shell, month[selection]);
+                App.refilter(FilterType.MONTH_ADDED, month[selection]);
             }
 
             public void widgetDefaultSelected(SelectionEvent e)
@@ -283,6 +287,9 @@ public class AppSortFilter
         resetButtons.setText("Reset Recipe View");
         resetButtons.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
+                // Reset Sort Filter Buttons
+                for (Combo c : combos)
+                    c.deselectAll();
                 App.readData();
                 App.setContent();
             }
@@ -298,10 +305,13 @@ public class AppSortFilter
         item2.setExpanded(true);
         
         bar.setSpacing(8);
+        App.shell.layout(true, true);
     }
     
     static Label recipeCnt;
     static Label lastEntry;
+    static Combo mainCombo;
+    static Combo ingrCombo;
 
     protected static void doUpdate()
     {
@@ -309,6 +319,20 @@ public class AppSortFilter
             recipeCnt.setText(App.getStats()[0]);
         if (lastEntry != null)
             lastEntry.setText(App.getStats()[1]);
-        App.shell.layout(true, true);        
+        
+        // Grab all ingredients
+        HashSet<String> existingIngr = new HashSet<String>();
+        HashSet<String> existingMainIngr = new HashSet<String>();
+        for (Recipe r : App.getRecipes())
+            if (r != null)
+            {
+                for (Ingredient i : r.getIngredients())
+                    existingIngr.add(i.getItem());
+                existingMainIngr.add(r.getMainIngredient().getItem());
+            }
+        mainCombo.setItems (existingMainIngr.toArray(new String[existingMainIngr.size()]));
+        ingrCombo.setItems (existingIngr.toArray(new String[existingIngr.size()]));
+        
+        App.shell.layout(true, true);
     }
 }

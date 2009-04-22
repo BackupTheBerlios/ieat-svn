@@ -530,6 +530,7 @@ public class RecipeEdit
     public static void deleteRecipe(Recipe r, Shell shell)
     {
         App.removeRecipe(r);
+        AppSortFilter.doUpdate();
         App.setContent();
         MessageBox box = new MessageBox(shell, 34);
         box.setText("Delete Confirmation");
