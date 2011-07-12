@@ -5,7 +5,7 @@
   <artifactId>gv-control</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>gv-control Maven Webapp</name>
+  <name>GV Control Web Application</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
