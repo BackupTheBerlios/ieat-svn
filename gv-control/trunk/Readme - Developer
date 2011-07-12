@@ -1,0 +1,22 @@
+Library Google-Voice-Java:
+	http://code.google.com/p/google-voice-java/wiki/GettingStarted
+	
+Getting Things Deployed to Open Repo: http://nexus.sonatype.org/oss-repository-hosting.html
+	Repo: https://oss.sonatype.org/index.html
+	Instructions: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+		Specifically see step 7a.
+	
+JIRA: https://issues.sonatype.org/secure/Dashboard.jspa
+	username: choward
+	Submitted ticket for creation of group: https://issues.sonatype.org/browse/OSSRH-1936
+	
+Google Auth Service (Helps Captcha issues):
+	Basic Discussion: http://code.google.com/googleapps/faq.html#captchas
+	Impl Details: http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html
+	
+
+	
+TODO List:
+	- Get Google Voice API posted to OSS
+	- Play around with basic example
+	- Implement advanced security (captcha issues)
